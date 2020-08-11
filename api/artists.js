@@ -6,7 +6,7 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 
 //Router param
 artistsRouter.param('artistId', (req, res, next, id) => {
-  db.get('SELECT * FROM Artist WHERE id = $id', {$id: id}, (err, artist) => {
+  db.get(`SELECT * FROM Artist WHERE id = ${id}`, (err, artist) => {
     if (err) {
       next(err);
     } else if (artist) {
