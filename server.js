@@ -9,6 +9,12 @@ const apiRouter = require('./api/api');
 //Create express app
 const app = express();
 
+//Use packages in app
+app.use(morgan('dev'));
+app.use(cors());
+app.use(errorHandler());
+app.use(bodyParser.json());
+
 //Set port
 const PORT = process.env.PORT || 4000;
 

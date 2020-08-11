@@ -33,6 +33,32 @@ artistsRouter.get('/', (req, res, next) => {
 
 artistsRouter.get('/:artistId', (req, res, next) => {
   res.status(200).json({artist: req.artist});
-})
+});
+
+artistsRouter.post('/', (req, res, next) => {
+  const artist = req.body.artist;
+  if (!artist.name || !artist.dateOfBirth || !artist.biography) {
+    return res.sendStatus(400);
+  }
+  const employed = artist.isCurrentlyEmployed === 0 ? 0 : 1;
+  db.run(`INSERT INTO Artist (name, date_of_birth, biography, is_currently_employed) VALUES ($name, $dateOfBirth, $biography, $isCurrentlyEmployed)`, {
+    $name: artist.name,
+    $dateOfBirth: artist.dateOfBirth,
+    $biography: artist.biography,
+    $isCurrentlyEmployed: employed
+  }, function(err) {
+    if (err) {
+      next(err);
+    } else {
+      db.get(`SELECT * FROM Artist WHERE id = ${this.lastID}`, (err, artist) => {
+        if (err) {
+          next(err);
+        } else {
+          res.status(201).json({artist: artist});
+        }
+      });
+    }
+  });
+});
 
 module.exports = artistsRouter;
