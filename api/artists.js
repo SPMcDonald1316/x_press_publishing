@@ -31,4 +31,8 @@ artistsRouter.get('/', (req, res, next) => {
   });
 });
 
+artistsRouter.get('/:artistId', (req, res, next) => {
+  res.status(200).json({artist: req.artist});
+})
+
 module.exports = artistsRouter;
